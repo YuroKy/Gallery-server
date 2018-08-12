@@ -7,9 +7,9 @@ namespace Gallery.Server.Data
 	{
 		public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options){}
 
-		public DbSet<Picture> Pictures { get; set; }
-		public DbSet<User> Users { get; set; }
-		public DbSet<Comment> Comments { get; set; }
+		public DbSet<PictureEntity> Pictures { get; set; }
+		public DbSet<UserEntity> Users { get; set; }
+		public DbSet<CommentEntity> Comments { get; set; }
 
 
 	}

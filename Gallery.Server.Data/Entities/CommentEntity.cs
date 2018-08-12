@@ -3,10 +3,10 @@ using System;
 
 namespace Gallery.Server.Data.Entities
 {
-	public class Comment
+	public class CommentEntity
 	{
 		public int Id { get; set; }
-		public User Author { get; set; }
+		public UserEntity Author { get; set; }
 		public DateTime Date { get; set; }
 		public string Content { get; set; }
 		public CommentStatus Status { get; set; }

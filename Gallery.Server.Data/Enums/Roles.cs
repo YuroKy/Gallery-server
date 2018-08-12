@@ -4,6 +4,6 @@
     {
 		User = 1,
 		Admin = 2,
-		Anon = 3 // ToDo: asd
+		Anon = 3 // ToDo: ds
     }
 }
