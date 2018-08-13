@@ -1,30 +1,34 @@
 ﻿using Gallery.Server.Data.Abstractions;
 using Gallery.Server.Data.Entities;
 using Gallery.Server.Data.Implementation;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Gallery.Server.Data
 {
-	public class UnitOfWork : IDisposable
+	public class UnitOfWork : IUnitOfWork
 	{
 		private readonly ApplicationContext _context;
-		private readonly IRepository<UserEntity> _userRepository;
-		private readonly IRepository<CommentEntity> _commentRepository;
-		private readonly IRepository<PictureEntity> _pictureRepository;
+		public IRepository<UserEntity> UsersRepository { get; }
+		public IRepository<CommentEntity> CommentsRepository { get; }
+		public IRepository<PictureEntity> PicturesRepository { get; }
+
 
 		public UnitOfWork(ApplicationContext context)
 		{
 			_context = context;
-			_userRepository = new Repository<UserEntity>(context);
-			_commentRepository = new Repository<CommentEntity>(context);
-			_pictureRepository = new Repository<PictureEntity>(context);
+			UsersRepository = new Repository<UserEntity>(context);
+			CommentsRepository = new Repository<CommentEntity>(context);
+			PicturesRepository = new Repository<PictureEntity>(context);
 		}
 
-		public void Dispose()
+		public async Task SaveChangesAsync()
 		{
-			_context.Dispose();
+			await _context.SaveChangesAsync();
+		}
+
+		public void SaveChanges()
+		{
+			_context.SaveChanges();
 		}
 	}
 }

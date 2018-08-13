@@ -4,20 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Gallery.Server.Data.Implementation
 {
 	public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 	{
-		private readonly ApplicationContext _context;
 		private readonly DbSet<TEntity> _dbSet;
 
-		public Repository(ApplicationContext context)
+		public Repository(DbContext context)
 		{
-			_context = context;
-			_dbSet = _context.Set<TEntity>();
+			_dbSet = context.Set<TEntity>();
 		}
 
 		public void Insert(TEntity item)
@@ -47,7 +44,7 @@ namespace Gallery.Server.Data.Implementation
 
 		public IEnumerable<TEntity> GetAsNoTracking(Func<TEntity, bool> predicate)
 		{
-			return _dbSet.AsNoTracking().Where(predicate).ToList();
+			return _dbSet.AsNoTracking().AsEnumerable().Where(predicate).ToList();
 		}
 
 		public IEnumerable<TEntity> GetAsNoTracking()
@@ -74,12 +71,12 @@ namespace Gallery.Server.Data.Implementation
 
 		public IEnumerable<TEntity> GetWithInclude(Func<TEntity, bool> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
 		{
-			return Include(includeProperties).Where(predicate).ToList();
+			return Include(includeProperties).AsEnumerable().Where(predicate).ToList();
 		}
 
 		public IEnumerable<TEntity> GetWithIncludeAsNoTracking(Func<TEntity, bool> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
 		{
-			return IncludeAsNoTracking(includeProperties).Where(predicate).ToList();
+			return IncludeAsNoTracking(includeProperties).AsEnumerable().Where(predicate).ToList();
 		}
 
 		#region private

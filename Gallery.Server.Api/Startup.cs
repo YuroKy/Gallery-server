@@ -1,5 +1,9 @@
 ﻿using Gallery.Server.Data;
+using Gallery.Server.Data.Abstractions;
+using Gallery.Server.Data.Implementation;
 using Gallery.Server.Data.Options;
+using Gallery.Server.Operations.Abstractions;
+using Gallery.Server.Operations.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,6 +44,12 @@ namespace Gallery.Server.Api
 							ValidateIssuerSigningKey = true,
 						};
 					});
+
+			//DI
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddScoped<DbContext, ApplicationContext>();
+			services.AddScoped<IAccountOperations, AccountOperations>();
+
 
 			services.AddCors();
 			services.AddMvc();

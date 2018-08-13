@@ -6,6 +6,6 @@ namespace Gallery.Server.Operations.Abstractions
 	public interface IAccountOperations
 	{
 		Task Register(RegisterModel model);
-		Task<AuthorizationResponseModel> Login(LoginModel model);
+		AuthorizationResponseModel Login(LoginModel model);
 	}
 }

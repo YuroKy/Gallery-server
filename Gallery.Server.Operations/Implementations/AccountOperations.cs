@@ -15,32 +15,36 @@ namespace Gallery.Server.Operations.Implementations
 {
 	public class AccountOperations : IAccountOperations
 	{
-		private readonly ApplicationContext _context;
+		private readonly IUnitOfWork _uow;
 
-		public AccountOperations(ApplicationContext context)
+		public AccountOperations(IUnitOfWork uow)
 		{
-			_context = context;
+			_uow = uow;
 		}
 
-		public async Task<AuthorizationResponseModel> Login(LoginModel model)
+		public AuthorizationResponseModel Login(LoginModel model)
 		{
-			var identity = await GetIdentity(model.UserName, model.Password);
+			var identity = GetIdentity(model.UserName, model.Password);
 
 			if (identity == null)
 			{
 				throw new Exception("Invalid username or password.");
 			}
 
+			var userId = _uow.UsersRepository
+				.Get(u => u.Username == model.UserName && u.Password == model.Password)
+				.First().Id;
+
 			return new AuthorizationResponseModel
 			{
-				UserId = _context.Users.FirstOrDefault(u => u.Username == model.UserName && u.Password == model.Password).Id,
+				UserId = userId,
 				UserName = identity.Name,
 				AccessToken = TokenHelper.GenerateJWT(identity)
 			};
 		}
 		public async Task Register(RegisterModel model)
 		{
-			await _context.Users.AddAsync(new UserEntity
+			await _uow.UsersRepository.InsertAsync(new UserEntity
 			{
 				Username = model.UserName,
 				Email = model.Email,
@@ -48,13 +52,15 @@ namespace Gallery.Server.Operations.Implementations
 				Role = Roles.User
 			});
 
-			await _context.SaveChangesAsync();
+			await _uow.SaveChangesAsync();
 		}
 
 		#region private
-		private async Task<ClaimsIdentity> GetIdentity(string username, string password)
+		private ClaimsIdentity GetIdentity(string username, string password)
 		{
-			var person = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+			var person = _uow
+				.UsersRepository.Get(u => u.Username == username && u.Password == password)
+				.FirstOrDefault();
 
 			if (person != null)
 			{
