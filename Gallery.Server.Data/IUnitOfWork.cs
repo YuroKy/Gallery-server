@@ -9,8 +9,8 @@ namespace Gallery.Server.Data
 		IRepository<UserEntity> UsersRepository { get; }
 		IRepository<CommentEntity> CommentsRepository { get; }
 		IRepository<PictureEntity> PicturesRepository { get; }
-
-		Task SaveChangesAsync();
+		IRepository<LikeEntity> LikesRepository { get; }
 		void SaveChanges();
+		Task SaveChangesAsync();
 	}
 }

@@ -49,6 +49,7 @@ namespace Gallery.Server.Api
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<DbContext, ApplicationContext>();
 			services.AddScoped<IAccountOperations, AccountOperations>();
+			services.AddScoped<IPictureOperations, PictureOperations>();
 
 
 			services.AddCors();

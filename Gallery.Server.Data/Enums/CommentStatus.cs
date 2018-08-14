@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Gallery.Server.Data.Enums
+﻿namespace Gallery.Server.Data.Enums
 {
 	public enum CommentStatus
 	{

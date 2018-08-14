@@ -11,6 +11,7 @@ namespace Gallery.Server.Data
 		public IRepository<UserEntity> UsersRepository { get; }
 		public IRepository<CommentEntity> CommentsRepository { get; }
 		public IRepository<PictureEntity> PicturesRepository { get; }
+		public IRepository<LikeEntity> LikesRepository { get; }
 
 
 		public UnitOfWork(ApplicationContext context)
@@ -19,6 +20,7 @@ namespace Gallery.Server.Data
 			UsersRepository = new Repository<UserEntity>(context);
 			CommentsRepository = new Repository<CommentEntity>(context);
 			PicturesRepository = new Repository<PictureEntity>(context);
+			LikesRepository = new Repository<LikeEntity>(context);
 		}
 
 		public async Task SaveChangesAsync()
