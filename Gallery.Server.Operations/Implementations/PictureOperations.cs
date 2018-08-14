@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Gallery.Server.Data;
 using Gallery.Server.Data.Entities;
+using Gallery.Server.Data.Models;
 using Gallery.Server.Operations.Abstractions;
 
 namespace Gallery.Server.Operations.Implementations
@@ -36,6 +34,35 @@ namespace Gallery.Server.Operations.Implementations
 			}
 
 			await _uow.SaveChangesAsync();
+		}
+
+		public PaginationInfoModel<PictureShortModel> GetPicturesWithPagination(PaginationModel paginationModel)
+		{
+			var pictures = _uow.PicturesRepository
+				.Get()
+				.OrderByDescending(x => x.Id)
+				.ToList();
+
+			if (paginationModel.LastItemId.HasValue)
+			{
+				pictures = pictures.Where(x => x.Id < paginationModel.LastItemId).ToList();
+			}
+
+			var data = pictures
+				.Take(paginationModel.Count)
+				.Select(x => new PictureShortModel
+				{
+					Id = x.Id,
+					Title = x.Title,
+					FileName = x.FileName,
+				})
+				.ToList();
+
+			return new PaginationInfoModel<PictureShortModel>
+			{
+				Data = data,
+				IsLast = data.Count() == pictures.Count()
+			};
 		}
 	}
 }
